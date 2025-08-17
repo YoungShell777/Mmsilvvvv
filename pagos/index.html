@@ -12,6 +12,25 @@
       font-family: "Poppins", sans-serif;
     }
   </style>
+
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '785490283922285'); 
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=785490283922285&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body class="bg-white">
 
@@ -59,7 +78,7 @@
     </div>
 
     <div class="max-w-md mx-auto mt-8 space-y-4">
-      <button onclick="redirectToPayment()" class="w-full bg-blue-600 text-white font-semibold text-lg rounded-full py-3" type="button">
+      <button id="btn-next-step" class="w-full bg-blue-600 text-white font-semibold text-lg rounded-full py-3" type="button">
         IR A PAGAR
       </button>
       <button class="w-full border-2 border-blue-600 text-blue-600 font-extrabold text-lg rounded-full py-3" type="button">
@@ -69,14 +88,25 @@
   </div>
 
   <script>
-    function redirectToPayment() {
+    document.getElementById('btn-next-step').addEventListener('click', function() {
       const selected = document.querySelector('input[name="payment"]:checked');
       if (selected) {
-        window.location.href = selected.value;
+        // Enviar evento Purchase al pixel
+        fbq('track', 'Purchase', {
+          value: 46100,
+          currency: 'COP',
+          contents: [{ quantity: 1 }]
+        });
+
+        // Pequeño delay para asegurar que el pixel se envía antes de redirigir
+        setTimeout(() => {
+          window.location.href = selected.value;
+        }, 500);
+
       } else {
         alert("Selecciona un método de pago.");
       }
-    }
+    });
   </script>
 
 </body>
